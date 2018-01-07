@@ -56,15 +56,15 @@
  *   For node server, there are many xml-to-dom module available.
  */
 var pako = require('pako');
-var lzo = require(__dirname+'/lzo.js');
+var lzo = require('./lzo.js');
 var Promise = require('bluebird');
-var common = require(__dirname+'/mdict-common.js');
+var common = require('./mdict-common.js');
 var TextDecoder = require('text-encoding').TextDecoder;
-var fs = require('fs');
+var reactNativeFs = require('react-native-fs');
 var DataView = require('buffer-dataview');
 var DOMParser = require('xmldom').DOMParser;
-var ripemd128 = require(__dirname+"/ripemd128.js");
-
+var ripemd128 = require("./ripemd128.js");
+var Buffer = require('buffer/').Buffer
 
 // (function (root, factory) {
 //   "use strict";
@@ -146,7 +146,11 @@ var ripemd128 = require(__dirname+"/ripemd128.js");
   // var fd = null;
   // var fdFileName = null;
   function sliceThen(file, offset, len) {
+
+
+
     var p = new Promise(function(_resolve) {
+      /*
       fs.open(file, 'r', function(err, fd){
         if (err) {
           throw err;
@@ -161,6 +165,12 @@ var ripemd128 = require(__dirname+"/ripemd128.js");
           _resolve(buffer);
         });
       });
+      */
+      reactNativeFs.read(file, len, offset, 'base64').then(base64String => {
+        let buffer = new Buffer(base64String, 'base64')
+        console.log(`file=${file}, len=${len}, offset=${offset}, base64String=${base64String}`)
+        _resolve(buffer)
+      })
     });
 
     /**
@@ -458,6 +468,7 @@ var ripemd128 = require(__dirname+"/ripemd128.js");
      * @return length of header_str
      */
     function read_file_head(input) {
+      //console.log('read file head: input length is:' + input.length())
       return Scanner(input).readInt();
     }
 

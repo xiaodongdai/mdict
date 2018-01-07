@@ -29,7 +29,7 @@
  *		
  *	});
  */
-var mdictParser = require(__dirname+'/mdict-parser.js');
+var mdictParser = require('./mdict-parser.js');
 var Promise = require('bluebird');
 
 exports.dictionary = function(filenames) {
